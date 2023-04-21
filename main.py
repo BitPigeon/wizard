@@ -29,6 +29,7 @@ class App(Tk):
         self.editor.tag_configure("tag", foreground="DarkBlue", font=self.bold_font)
         self.editor.tag_configure("doctype", foreground="Blue3", font=self.bold_font)
         self.editor.tag_configure("comment", foreground="Gray64", font=self.font)
+        self.editor.tag_configue("str", foreground="lime green", font=self.font)
         self.editor.tag_configure("sel", background="Gray88")
         self.editor.bind("<KeyPress>", self.keydown)
         self.editor.bind("<<Modified>>", self.highlight)
@@ -48,6 +49,7 @@ class App(Tk):
         while True:
             try:
                 match = re.match("<.*?>", text)
+                string_match = re.match("\".*?\"")
                 if match:
                     if not self.inside_style_tag and not self.inside_script_tag:
                         start = str(index[0]) + "." + str(index[1])
@@ -74,6 +76,10 @@ class App(Tk):
                         self.editor.tag_add("tag", start, end)
                     index[1] += 1
                     text = text[1:]
+                elif string_match:
+                    start = str(index[0]) + "." + str(index[1])
+                    end = str(index[0]) + "." + str(index[1] + len(match.group(0)))
+                    self.editor.tag_add("str", start, end)
                 elif text[0] == "\n":
                     index[0] += 1
                     index[1] = 0
