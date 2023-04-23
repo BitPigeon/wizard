@@ -43,6 +43,7 @@ class App(Tk):
         self.editor.tag_configure("tag", foreground="DarkBlue", font=self.bold_font)
         self.editor.tag_configure("doctype", foreground="Blue3", font=self.bold_font)
         self.editor.tag_configure("comment", foreground="Gray64", font=self.font)
+
         self.editor.tag_configure("str", foreground="Green", font=self.bold_font)
 
         self.editor.tag_configure("sel", background="Gray88")
@@ -109,7 +110,6 @@ class App(Tk):
 
                     index[1] += 1
                     text = text[1:]
-
                 elif string_match:
                     if not self.inside_style_tag and not self.inside_script_tag:
                         start = str(index[0]) + "." + str(index[1])
