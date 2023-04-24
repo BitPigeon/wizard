@@ -51,6 +51,7 @@ class App(Tk):
         self.editor.bind("<KeyPress>", self.keydown)
         self.editor.bind("<<Modified>>", self.highlight)
         self.editor.bind("<F5>", self.run)
+        self.editor.bind("<Return>", self.auto_indent)
         self.editor.bind("<Control-s>", self.save)
         self.editor.bind("<Control-o>", self.load_file)
 
@@ -85,11 +86,11 @@ class App(Tk):
                         start = str(index[0]) + "." + str(index[1])
                         end = str(index[0]) + "." + str(index[1] + len(match.group(0)))
 
-                        if re.match("<!--.*-->", text):
+                        if re.match(r'<!--.*-->', text):
                             self.editor.tag_add("comment", start, end)
-                        elif re.match("<!doctype.*>", text, flags=re.IGNORECASE):
+                        elif re.match(r'<!doctype.*>', text, flags=re.IGNORECASE):
                             self.editor.tag_add("doctype", start, end)
-                        elif re.match("</.*>", text):
+                        elif re.match(r'</.*>', text):
                             self.editor.tag_add("tag", start, end)
                         else:
                             self.editor.tag_add("tag", start, end)
@@ -97,14 +98,14 @@ class App(Tk):
                     start = str(index[0]) + "." + str(index[1])
                     end = str(index[0]) + "." + str(index[1] + len(match.group(0)))
 
-                    if re.match("<style.*>", match.group(0)):
+                    if re.match(r'<style.*>', match.group(0)):
                         self.inside_style_tag = True
-                    elif re.match("<script.*>", match.group(0)):
+                    elif re.match(r'<script.*>', match.group(0)):
                         self.inside_script_tag = True
-                    elif re.match("</script.*>", match.group(0)):
+                    elif re.match(r'</script.*>', match.group(0)):
                         self.inside_script_tag = False
                         self.editor.tag_add("tag", start, end)
-                    elif re.match("</style.*>", match.group(0)):
+                    elif re.match(r'</style.*>', match.group(0)):
                         self.inside_style_tag = False
                         self.editor.tag_add("tag", start, end)
 
@@ -256,6 +257,17 @@ class App(Tk):
         message = "This document is read only."
 
         showwarning(title, message)
+
+    def auto_indent(self, event):
+
+        line = self.editor.get("insert linestart", "insert")
+        
+        match = re.match(r'^(\s+)', line)
+        whitespace = match.group(0) if match else ""
+
+        self.editor.insert("insert", f"\n{whitespace}")
+
+        return "break"
 
 root = App()
 
