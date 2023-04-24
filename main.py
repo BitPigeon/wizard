@@ -49,7 +49,6 @@ class App(Tk):
         self.editor.tag_configure("sel", background="Gray88")
 
         self.editor.bind("<KeyPress>", self.keydown)
-        self.editor.bind("<KeyRelease>", self.autocomplete)
         self.editor.bind("<<Modified>>", self.highlight)
         self.editor.bind("<F5>", self.run)
         self.editor.bind("<Control-s>", self.save)
