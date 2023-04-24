@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from tkinter import Tk, Listbox, filedialog, END
+from tkinter import Tk, filedialog, END
 from tkinter.scrolledtext import ScrolledText
 from tkinter.messagebox import askokcancel, showwarning
 
@@ -85,7 +85,7 @@ class App(Tk):
                     if not self.inside_style_tag and not self.inside_script_tag:
                         start = str(index[0]) + "." + str(index[1])
                         end = str(index[0]) + "." + str(index[1] + len(match.group(0)))
-                        
+
                         if re.match("<!--.*-->", text):
                             self.editor.tag_add("comment", start, end)
                         elif re.match("<!doctype.*>", text, flags=re.IGNORECASE):
@@ -159,8 +159,7 @@ class App(Tk):
         if not self.read_only:
             logging.info("File saved.")
 
-            filetypes = (
-                ("HTML files", "*.html"), 
+            filetypes = (("HTML files", "*.html"),
                 ("PHP files", "*.php"),
                 ("Javascript files", "*.js"),
                 ("CSS files", "*.css"),
@@ -209,7 +208,7 @@ class App(Tk):
         "Load a file from the user's disk."
 
         filetypes = (
-            ("HTML files", "*.html"), 
+            ("HTML files", "*.html"),
             ("PHP files", "*.php"),
             ("Javascript files", "*.js"),
             ("CSS files", "*.css"),
@@ -226,7 +225,9 @@ class App(Tk):
         self.path = file.name
 
         if file:
-            if askokcancel("Load File", "Are you sure you want to replace the contents of the editor?"):
+            title = "Load File"
+            desc = "Are you sure you want to replace the contents of the editor?"
+            if askokcancel(title, desc):
                 self.editor.config(state="normal")
 
                 logging.info("File loaded.")
@@ -243,7 +244,7 @@ class App(Tk):
         "If it is read only, no keys can be typed."
 
         if not event.keysym.startswith("Control"):
-            if self.read_only == True:
+            if self.read_only:
                 self.show_ro_error()
 
     def show_ro_error(self):
