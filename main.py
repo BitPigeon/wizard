@@ -49,6 +49,7 @@ class App(Tk):
         self.editor.tag_configure("sel", background="Gray88")
 
         self.editor.bind("<KeyPress>", self.keydown)
+        self.editor.bind("<KeyPress>", self.close)
         self.editor.bind("<<Modified>>", self.highlight)
         self.editor.bind("<F5>", self.run)
         self.editor.bind("<Return>", self.auto_indent)
@@ -59,6 +60,16 @@ class App(Tk):
 
         self.path = None
         self.saved = False
+    
+    def close(self, e):
+        if e.keysym == "less":
+            self.editor.insert("insert-1c", "<")
+            self.editor.insert("end", ">")
+            return "break"
+        elif e.keysym == "quotedbl":
+            self.editor.insert("insert-1c", "\"")
+            self.editor.insert("end", "\"")
+            return "break"
 
     def highlight(self, _):
 
